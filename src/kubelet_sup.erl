@@ -66,8 +66,8 @@ children()->
      ?CHILD(dbase,worker),
      ?CHILD(log,worker),
      ?CHILD(catalog,worker),
+     ?CHILD(host,worker),
  %    ?CHILD(pod,worker),
- %    ?CHILD(host,worker),
      ?CHILD(kubelet,worker)
      ].
 %% ====================================================================

@@ -59,10 +59,13 @@ init()->
     [N0,N1,N2]=test_nodes:get_nodes(),
     io:format("read_all ~p~n",[{rpc:call(N0,catalog,get_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
     io:format("read_all ~p~n",[{rpc:call(N1,catalog,get_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
-       io:format("read_all ~p~n",[{rpc:call(N2,catalog,get_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
+    io:format("read_all ~p~n",[{rpc:call(N2,catalog,get_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
  %   R1=rpc:call(N0,mnesia,load_textfile,["catalog.config"],10*1000),
  %   io:format("R1 ~p~n",[{R1,?FUNCTION_NAME,?MODULE,?LINE}]),
- %   io:format("mnesia,system_info ~p~n",[{rpc:call(N0,mnesia,system_info,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
+  %  io:format("mnesia,system_info ~p~n",[{rpc:call(N0,mnesia,system_info,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
+    io:format("read_all ~p~n",[{rpc:call(N0,db_host,read_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
+    io:format("read_all ~p~n",[{rpc:call(N1,db_host,read_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
+    io:format("read_all ~p~n",[{rpc:call(N2,db_host,read_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
   
     ok.
 
@@ -90,7 +93,7 @@ a()->
 %% Returns: non
 %% --------------------------------------------------------------------
 setup()->
-   
+    
         
     ok.
 
