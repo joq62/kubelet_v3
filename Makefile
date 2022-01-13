@@ -16,7 +16,11 @@ all:
 #	bully
 	erlc -I ../log_server/include -o ebin ../bully_server/src/*.erl;
 #	catalog
+	cp ../catalog_server/include/catalog.config .;
 	erlc -I ../log_server/include -I ../catalog_server/include -o ebin ../catalog_server/src/*.erl;
+#	host
+	cp ../host_server/include/host.config .;
+	erlc -D unit_test -I ../log_server/include -I ../host_server/include -o ebin ../host_server/src/*.erl;
 #	app
 	cp src/*.app ebin;
 	erlc -I ../log_server/include -I include -o ebin src/*.erl;

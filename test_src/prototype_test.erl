@@ -66,7 +66,6 @@ init()->
     io:format("read_all ~p~n",[{rpc:call(N0,db_host,read_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
     io:format("read_all ~p~n",[{rpc:call(N1,db_host,read_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
     io:format("read_all ~p~n",[{rpc:call(N2,db_host,read_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
-  
     ok.
 
 %% --------------------------------------------------------------------
@@ -104,7 +103,8 @@ setup()->
 %% -------------------------------------------------------------------    
 
 cleanup()->
-   
+    [N0|_]=test_nodes:get_nodes(),
+    rpc:call(N0,log,print_all,[],5000),
     ok.
 %% --------------------------------------------------------------------
 %% Function:start/0 
