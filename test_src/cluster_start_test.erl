@@ -86,6 +86,13 @@ init()->
     
 %   io:format("nodes() ~p~n",[{nodes(),?FUNCTION_NAME,?MODULE,?LINE}]),
     rpc:call(N0,log,read_all,[],5000),
+
+    [N0,N1,N2]=test_nodes:get_nodes(),
+    rpc:cast(N0,log,log,[?Log_alert("test1",["Makefile","glurk"])]),
+    rpc:cast(N1,log,log,[?Log_alert("test2",[120,76])]),
+    rpc:cast(N2,log,log,[?Log_ticket("test3",[42])]),
+    rpc:cast(N0,log,log,[?Log_info("server started",[{?MODULE,?LINE,?FUNCTION_NAME}])]),
+ %   rpc:call(N0,log,read_all,[],5000),
     ok.
 
 %% --------------------------------------------------------------------

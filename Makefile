@@ -2,7 +2,7 @@ all:
 #	service
 	rm -rf ebin/* *_ebin;
 	rm -rf src/*.beam *.beam  test_src/*.beam test_ebin;
-	rm -rf  *~ */*~  erl_cra*;
+	rm -rf  *~ */*~  erl_cra* *.config;
 	rm -rf *.log;
 #	common
 #	cp ../common/src/*.app ebin;
@@ -15,13 +15,15 @@ all:
 	erlc -I ../log_server/include -o ebin ../log_server/src/*.erl;
 #	bully
 	erlc -I ../log_server/include -o ebin ../bully_server/src/*.erl;
+#	catalog
+	erlc -I ../log_server/include -o ebin ../catalog_server/src/*.erl;
 #	app
 	cp src/*.app ebin;
 	erlc -I ../log_server/include -I include -o ebin src/*.erl;
 	echo Done
 unit_test:
 	rm -rf ebin/* src/*.beam *.beam test_src/*.beam test_ebin;
-	rm -rf  *~ */*~  erl_cra*;
+	rm -rf  *~ */*~  erl_cra* *.text_file *.config;
 	mkdir test_ebin;
 #	common
 #	cp ../common/src/*.app ebin;
@@ -34,6 +36,10 @@ unit_test:
 	erlc -D unit_test -I ../log_server/include -o ebin ../log_server/src/*.erl;
 #	bully
 	erlc -D unit_test -I ../log_server/include -o ebin ../bully_server/src/*.erl;
+#	catalog
+	cp ../catalog_server/include/catalog.config .;
+#	cp ../catalog_server/include/host.config .;	
+	erlc -D unit_test -I ../log_server/include -o ebin ../catalog_server/src/*.erl;
 #	app
 	cp src/*.app ebin;
 	erlc -D unit_test -I ../log_server/include -I include -o ebin src/*.erl;

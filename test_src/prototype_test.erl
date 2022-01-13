@@ -57,11 +57,12 @@ start()->
 init()->
     
     [N0,N1,N2]=test_nodes:get_nodes(),
-    rpc:cast(N0,log,log,[?Log_alert("test1",["Makefile","glurk"])]),
-    rpc:cast(N1,log,log,[?Log_alert("test2",[120,76])]),
-    rpc:cast(N2,log,log,[?Log_ticket("test3",[42])]),
-    rpc:cast(N0,log,log,[?Log_info("server started",[{?MODULE,?LINE,?FUNCTION_NAME}])]),
-    rpc:call(N0,log,read_all,[],5000),
+    io:format("read_all ~p~n",[{rpc:call(N0,catalog,get_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
+    io:format("read_all ~p~n",[{rpc:call(N1,catalog,get_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
+       io:format("read_all ~p~n",[{rpc:call(N2,catalog,get_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
+ %   R1=rpc:call(N0,mnesia,load_textfile,["catalog.config"],10*1000),
+ %   io:format("R1 ~p~n",[{R1,?FUNCTION_NAME,?MODULE,?LINE}]),
+ %   io:format("mnesia,system_info ~p~n",[{rpc:call(N0,mnesia,system_info,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
   
     ok.
 

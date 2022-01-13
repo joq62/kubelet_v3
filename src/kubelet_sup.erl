@@ -65,7 +65,7 @@ children()->
      ?CHILD(bully,worker),
      ?CHILD(dbase,worker),
      ?CHILD(log,worker),
- %    ?CHILD(catalog,worker),
+     ?CHILD(catalog,worker),
  %    ?CHILD(pod,worker),
  %    ?CHILD(host,worker),
      ?CHILD(kubelet,worker)
