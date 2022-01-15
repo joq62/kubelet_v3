@@ -12,6 +12,10 @@ all:
 	cp ../bully_server/src/*.erl external_src;
 	cp ../log_server/include/* external_include;
 	cp ../log_server/src/*.erl external_src;
+	cp ../host_server/include/* external_include;
+	cp ../host_server/include/*.config external_include;
+	cp ../host_server/include/*.config ebin;
+	cp ../host_server/src/*.erl external_src;
 #	external
 	erlc -I include -I external_include -o ebin external_src/*.erl;
 #	kubelet
@@ -37,9 +41,13 @@ unit_test:
 #	log_server
 	cp ../log_server/include/* external_include;
 	cp ../log_server/src/*.erl external_src;
+#	host_server
+	cp ../host_server/include/* external_include;
+	cp ../host_server/include/*.config ebin;
+	cp ../host_server/src/*.erl external_src;
 #	external
 	erlc -D unit_test -I include -I external_include -o ebin external_src/*.erl;
-#	basic
+#	kubelet
 	cp src/*.app ebin;
 	erlc -D unit_test -I include -o ebin src/*.erl;
 #	test application

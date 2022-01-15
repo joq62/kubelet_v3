@@ -1,0 +1,6 @@
+-ifdef(unit_test).
+-define(TextFile,"test_host.config").
+-else.
+-define(TextFile,"host.config").
+-endif.
+-define(ScheduleInterval,20*1000).

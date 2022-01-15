@@ -7,7 +7,7 @@
 %%% 
 %%% Created : 10 dec 2012
 %%% -------------------------------------------------------------------
--module(kubelet_server).
+-module(host_server). 
 
 -behaviour(gen_server).
 
@@ -15,31 +15,25 @@
 %% Include files
 %% --------------------------------------------------------------------
 -include("log.hrl").
+-include("host.hrl").
 %% --------------------------------------------------------------------
+
+
 
 %% External exports
 -export([
-	 schedule/0
 	]).
-
-
-%% gen_server callbacks
-
 
 
 -export([init/1, handle_call/3,handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
--record(state, {loaded,
-		spec_list
+-record(state, {
 	       }).
 
 %% ====================================================================
 %% External functions
 %% ====================================================================
 
-
-schedule()->
-    gen_server:cast(?MODULE, {schedule}).
 
 %% ====================================================================
 %% Server functions
@@ -54,16 +48,22 @@ schedule()->
 %%          {stop, Reason}
 %% --------------------------------------------------------------------
 init([]) ->
-    ok=application:start(sd),
-    ok=application:set_env([{dbase,[{application,dbase}]}]),
-    ok=application:start(dbase),
-    ok=application:start(log),
-    ok=application:set_env([{bully,[{application,bully}]}]),
-    ok=application:start(bully),
-    ok=application:start(host),
-
-    rpc:cast(node(),log,log,[?Log_info("server started",[])]),
-    {ok, #state{}}.
+    case code:where_is_file(?TextFile) of
+	non_existing->
+	    rpc:cast(node(),log,log,[?Log_ticket("non_existing textfile",[])]);
+	TextFile->
+	    case rpc:call(node(),lib_host,load_textfile,[TextFile],5000) of
+		{atomic,ok}->
+		    ok;
+		{error,Reason}->
+		    rpc:cast(node(),log,log,[?Log_ticket("error in load_textfile to mnesia ",[Reason])])
+	    end
+    end,
+      
+    spawn(fun()->do_desired_state() end),
+    log:log(?Log_info("server started",[])),
+    {ok, #state{}
+    }.
 
 %% --------------------------------------------------------------------
 %% Function: handle_call/3
@@ -75,15 +75,41 @@ init([]) ->
 %%          {stop, Reason, Reply, State}   | (terminate/2 is called)
 %%          {stop, Reason, State}            (terminate/2 is called)
 %% --------------------------------------------------------------------
-handle_call({ping},_From, State) ->
-    Reply=pong,
+
+handle_call({started_nodes},_From, State) ->
+    Reply=lib_host:node_started(),
+    {reply, Reply, State};
+handle_call({host_host},_From, State) ->
+    Reply=db_host:status(),
+    {reply, Reply, State};
+handle_call({host_host,Id},_From, State) ->
+    Reply=db_host:status(Id),
+    {reply, Reply, State};
+handle_call({node_host},_From, State) ->
+    Reply={node_host},
+    {reply, Reply, State};
+handle_call({node_host,Id},_From, State) ->
+    Reply={node_host,Id},
+    {reply, Reply, State};
+
+
+handle_call({stopped},_From, State) ->
+    Reply=ok,
+    {reply, Reply, State};
+
+
+
+
+handle_call({not_implemented},_From, State) ->
+    Reply=not_implemented,
     {reply, Reply, State};
 
 handle_call({stop}, _From, State) ->
     {stop, normal, shutdown_ok, State};
 
 handle_call(Request, From, State) ->
-    Reply = {unmatched_signal,?MODULE,Request,From},
+    log:log(?Log_ticket("unmatched call",[Request, From])),
+    Reply = {ticket,"unmatched call",Request, From},
     {reply, Reply, State}.
 
 %% --------------------------------------------------------------------
@@ -93,15 +119,13 @@ handle_call(Request, From, State) ->
 %%          {noreply, State, Timeout} |
 %%          {stop, Reason, State}            (terminate/2 is called)
 %% --------------------------------------------------------------------
-handle_cast({reboot}, State) ->
-    rpc:cast(node(),log,log,[?Log_info("reboot",[])]),
-    os:cmd("reboot"),
-    init:stop(),
 
+handle_cast({desired_state}, State) ->
+    spawn(fun()->do_desired_state() end),
     {noreply, State};
 
 handle_cast(Msg, State) ->
-    io:format("unmatched match cast ~p~n",[{Msg,?MODULE,?LINE}]),
+    log:log(?Log_ticket("unmatched cast",[Msg])),
     {noreply, State}.
 
 %% --------------------------------------------------------------------
@@ -112,7 +136,7 @@ handle_cast(Msg, State) ->
 %%          {stop, Reason, State}            (terminate/2 is called)
 %% --------------------------------------------------------------------
 handle_info(Info, State) ->
-    io:format("unmatched match~p~n",[{Info,?MODULE,?LINE}]), 
+    log:log(?Log_ticket("unmatched info",[Info])),
     {noreply, State}.
 
 %% --------------------------------------------------------------------
@@ -134,3 +158,16 @@ code_change(_OldVsn, State, _Extra) ->
 %% --------------------------------------------------------------------
 %%% Internal functions
 %% --------------------------------------------------------------------
+do_desired_state()->
+    % io:format("~p~n",[{time(),node(),?MODULE,?FUNCTION_NAME,?LINE,CallerPid}]),
+    case bully:am_i_leader(node()) of
+	       false->
+		   ok;
+	       true->
+		   Result=rpc:call(node(),host_desired_state,start,[],2*60*1000),
+		   log:log(?Log_info("Result",[Result]))
+	   end,
+   
+    timer:sleep(?ScheduleInterval),
+    rpc:cast(node(),host,desired_state,[]).
+		  
