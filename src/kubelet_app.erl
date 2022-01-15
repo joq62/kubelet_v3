@@ -57,7 +57,6 @@
 %% --------------------------------------------------------------------
 start(_Type, _StartArgs) ->
     ok=init(),
-    ok=application:set_env([{kubelet,[{application,kubelet}]}]),
     {ok,Pid}= kubelet_sup:start_link(),
     {ok,Pid}.
    
@@ -72,5 +71,13 @@ stop(_State) ->
 %% Internal functions
 %% ====================================================================
 init()->
-    
+    ok=application:start(sd),
+
+    ok=application:set_env([{dbase,[{application,dbase}]}]),
+    ok=application:start(dbase),
+
+    ok=application:start(log),
+
+    ok=application:set_env([{bully,[{application,bully}]}]),
+    ok=application:start(bully),
     ok.

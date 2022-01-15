@@ -30,14 +30,14 @@ start()->
     ok=setup(),
     io:format("~p~n",[{"Stop setup",?MODULE,?FUNCTION_NAME,?LINE}]),
 
-
-    io:format("~p~n",[{"Start cluster_start_test()",?MODULE,?FUNCTION_NAME,?LINE}]),
+  
+    io:format("~p~n",[{"Start cluster_test()",?MODULE,?FUNCTION_NAME,?LINE}]),
     ok=cluster_start_test:start(),
-    io:format("~p~n",[{"Stop cluster_start_test()",?MODULE,?FUNCTION_NAME,?LINE}]),
+    io:format("~p~n",[{"Stop cluster_test()",?MODULE,?FUNCTION_NAME,?LINE}]),
 
-    io:format("~p~n",[{"Start prototype_test()",?MODULE,?FUNCTION_NAME,?LINE}]),
-    ok=prototype_test:start(),
-    io:format("~p~n",[{"Stop prototype_test()",?MODULE,?FUNCTION_NAME,?LINE}]),
+ % io:format("~p~n",[{"Start prototype_test()",?MODULE,?FUNCTION_NAME,?LINE}]),
+  %  ok=prototype_test:start(),
+  %  io:format("~p~n",[{"Stop prototype_test()",?MODULE,?FUNCTION_NAME,?LINE}]),
 
   %  io:format("~p~n",[{"Start distributed_test()",?MODULE,?FUNCTION_NAME,?LINE}]),
 %    ok=single_test:start(),

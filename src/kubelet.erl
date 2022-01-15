@@ -11,6 +11,7 @@
 %% Behavioural exports
 %% --------------------------------------------------------------------
 -export([
+	 reboot/0,
 	 ping/0
 	]).
 
@@ -47,6 +48,8 @@ start()-> gen_server:start_link({local, ?SERVER}, ?SERVER, [], []).
 stop()-> gen_server:call(?SERVER, {stop},infinity).
 ping()-> gen_server:call(?SERVER, {ping},infinity).
 
+
+reboot()-> gen_server:cast(?SERVER, {reboot}).
 
 %load_from_file(Module,Dir,Directive)->
  %   gen_server:call(?SERVER, {load_from_file,Module,Dir,Directive},infinity).

@@ -55,17 +55,15 @@ start()->
 %% Returns: non
 %% -------------------------------------------------------------------
 init()->
+    log:log(?Log_alert("test1",["Makefile","glurk"])),
+    log:log(?Log_alert("test2",[120,76])),
+    log:log(?Log_ticket("test3",[42])),
+    log:log(?Log_info("server started",[{?MODULE,?LINE,?FUNCTION_NAME}])),
+
+      
+    ok=log:print_all(),
     
-    [N0,N1,N2]=test_nodes:get_nodes(),
-    io:format("read_all ~p~n",[{rpc:call(N0,catalog,get_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
-    io:format("read_all ~p~n",[{rpc:call(N1,catalog,get_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
-    io:format("read_all ~p~n",[{rpc:call(N2,catalog,get_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
- %   R1=rpc:call(N0,mnesia,load_textfile,["catalog.config"],10*1000),
- %   io:format("R1 ~p~n",[{R1,?FUNCTION_NAME,?MODULE,?LINE}]),
-  %  io:format("mnesia,system_info ~p~n",[{rpc:call(N0,mnesia,system_info,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
-    io:format("read_all ~p~n",[{rpc:call(N0,db_host,read_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
-    io:format("read_all ~p~n",[{rpc:call(N1,db_host,read_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
-    io:format("read_all ~p~n",[{rpc:call(N2,db_host,read_all,[],10*1000),?FUNCTION_NAME,?MODULE,?LINE}]),
+
     ok.
 
 %% --------------------------------------------------------------------
@@ -82,18 +80,17 @@ init()->
 %% Description: Initiate the eunit tests, set upp needed processes etc
 %% Returns: non
 %% -------------------------------------------------------------------
-a()->
-    						
 
-    ok.
 %% --------------------------------------------------------------------
 %% Function:start/0 
 %% Description: Initiate the eunit tests, set upp needed processes etc
 %% Returns: non
 %% --------------------------------------------------------------------
+
 setup()->
-    
-        
+    ok=application:start(kubelet),
+  %  timer:sleep(2000),
+    io:format("which applications~p~n",[{application:which_applications(),?MODULE,?FUNCTION_NAME,?LINE}]),
     ok.
 
 %% --------------------------------------------------------------------
@@ -103,8 +100,7 @@ setup()->
 %% -------------------------------------------------------------------    
 
 cleanup()->
-    [N0|_]=test_nodes:get_nodes(),
-    rpc:call(N0,log,print_all,[],5000),
+   
     ok.
 %% --------------------------------------------------------------------
 %% Function:start/0 

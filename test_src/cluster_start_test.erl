@@ -92,7 +92,9 @@ init()->
     rpc:cast(N1,log,log,[?Log_alert("test2",[120,76])]),
     rpc:cast(N2,log,log,[?Log_ticket("test3",[42])]),
     rpc:cast(N0,log,log,[?Log_info("server started",[{?MODULE,?LINE,?FUNCTION_NAME}])]),
- %   rpc:call(N0,log,read_all,[],5000),
+    
+    rpc:call(N0,log,print_all,[],5000),
+ 
     ok.
 
 %% --------------------------------------------------------------------

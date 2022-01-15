@@ -85,6 +85,13 @@ handle_call(Request, From, State) ->
 %%          {noreply, State, Timeout} |
 %%          {stop, Reason, State}            (terminate/2 is called)
 %% --------------------------------------------------------------------
+handle_cast({reboot}, State) ->
+    rpc:cast(node(),log,log,[?Log_info("reboot",[])]),
+    os:cmd("reboot"),
+    init:stop(),
+
+    {noreply, State};
+
 handle_cast(Msg, State) ->
     io:format("unmatched match cast ~p~n",[{Msg,?MODULE,?LINE}]),
     {noreply, State}.

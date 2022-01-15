@@ -61,14 +61,7 @@ init([]) ->
     }.
 
 children()->
-    [?CHILD(sd,worker),
-     ?CHILD(bully,worker),
-     ?CHILD(dbase,worker),
-     ?CHILD(log,worker),
-     ?CHILD(catalog,worker),
-     ?CHILD(host,worker),
- %    ?CHILD(pod,worker),
-     ?CHILD(kubelet,worker)
+    [?CHILD(kubelet,worker)
      ].
 %% ====================================================================
 %% Internal functions
