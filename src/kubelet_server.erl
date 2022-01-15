@@ -54,6 +54,13 @@ schedule()->
 %%          {stop, Reason}
 %% --------------------------------------------------------------------
 init([]) ->
+    ok=application:start(sd),
+    ok=application:set_env([{dbase,[{application,dbase}]}]),
+    ok=application:start(dbase),
+    ok=application:start(log),
+    ok=application:set_env([{bully,[{application,bully}]}]),
+    ok=application:start(bully),
+
     rpc:cast(node(),log,log,[?Log_info("server started",[])]),
     {ok, #state{}}.
 

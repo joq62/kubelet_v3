@@ -71,13 +71,5 @@ stop(_State) ->
 %% Internal functions
 %% ====================================================================
 init()->
-    ok=application:start(sd),
-
-    ok=application:set_env([{dbase,[{application,dbase}]}]),
-    ok=application:start(dbase),
-
-    ok=application:start(log),
-
-    ok=application:set_env([{bully,[{application,bully}]}]),
-    ok=application:start(bully),
+    
     ok.
