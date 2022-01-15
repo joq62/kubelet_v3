@@ -20,7 +20,7 @@ all:
 	erlc -I include -I external_include -o ebin external_src/*.erl;
 #	kubelet
 	cp src/*.app ebin;
-	erlc -I ../log_server/include -o ebin src/*.erl;
+	erlc -I ../log_server/include -I external_include -o ebin src/*.erl;
 	echo Done
 unit_test:
 	rm -rf ebin/* src/*.beam *.beam test_src/*.beam test_ebin;
@@ -49,7 +49,7 @@ unit_test:
 	erlc -D unit_test -I include -I external_include -o ebin external_src/*.erl;
 #	kubelet
 	cp src/*.app ebin;
-	erlc -D unit_test -I include -o ebin src/*.erl;
+	erlc -D unit_test -I include -I external_include -o ebin src/*.erl;
 #	test application
 	cp test_src/*.app test_ebin;
 	erlc -D debug_flag -I include -o test_ebin test_src/*.erl;

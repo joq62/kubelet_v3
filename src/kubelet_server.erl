@@ -15,6 +15,7 @@
 %% Include files
 %% --------------------------------------------------------------------
 -include("log.hrl").
+-include("host.hrl").
 %% --------------------------------------------------------------------
 
 %% External exports
@@ -54,6 +55,8 @@ schedule()->
 %%          {stop, Reason}
 %% --------------------------------------------------------------------
 init([]) ->
+    [net_adm:ping(Node)||Node<-?KubeletNodes],
+
     ok=application:start(sd),
     ok=application:set_env([{dbase,[{application,dbase}]}]),
     ok=application:start(dbase),
