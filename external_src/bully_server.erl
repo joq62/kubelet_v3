@@ -185,10 +185,8 @@ code_change(_OldVsn, State, _Extra) ->
 %% Returns: non
 %% --------------------------------------------------------------------
 start_election(State) ->
-%    io:format("Election started by Node ~p~n",[{node(),?FUNCTION_NAME,?MODULE,?LINE}]),
-%    rpc:cast(node(),db_logger,create,["log","election started",atom_to_list(node()),{?MODULE,?FUNCTION_NAME,?LINE}]),
-%    {ok,Nodes}=application:get_env(bully,nodes),   
-     Nodes=lib_bully:get_nodes(),
+    rpc:cast(node(),log,log,[?Log_info("election started by node ",[node()])]),
+    Nodes=lib_bully:get_nodes(),
 %    NodesHigherId=nodes_with_higher_ids(Nodes),
 %    [rpc:cast(Node,bully,election_message,[node()])||Node<-NodesHigherId],
     NodesLowerId=nodes_with_lower_ids(Nodes),
@@ -205,6 +203,7 @@ start_election(State) ->
 %% Returns: non
 %% --------------------------------------------------------------------
 win_election( State) ->
+    rpc:cast(node(),log,log,[?Log_info("Node  won the election ",[node()])]),
   %  io:format("Node  won the election ~p~n", [{node(),?FUNCTION_NAME,?MODULE,?LINE}]),
  %   rpc:cast(node(),db_logger,create,["log","election winner",atom_to_list(node()),{?MODULE,?FUNCTION_NAME,?LINE}]),
 %    {ok,Nodes}=application:get_env(bully,nodes),
