@@ -21,6 +21,7 @@
 %% --------------------------------------------------------------------
 -export([
 	 nice_print/1,
+	 nice_print/2,
 	 store/1,
 	 print_all/0,
 	 print_all/1,
@@ -73,7 +74,12 @@ read_all_info(NumLatesInfo)->
 %%          {error, Reason}
 %%---------------------------------------------------------------------
 nice_print(Id)->
-    case db_log:read(Id) of
+    nice_print(Id,node()).
+
+nice_print(Id,Node)->
+    case rpc:call(Node,db_log,read,[Id],5*1000) of
+	{badrpc,Reason}->
+	    {error,[badrpc,Reason]};
 	{aborted,Reason}->
 	    {error,Reason};
 	Info->
