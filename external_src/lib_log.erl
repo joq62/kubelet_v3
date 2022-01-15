@@ -57,14 +57,18 @@
 
 read_all_info()->
     Info=mnesia:dirty_all_keys(logger_info),
-    SortedList=lists:reverse(lists:sort(Info)),
-    [db_log:read(Id)||Id<-SortedList].
+    SortedIdList=lists:reverse(lists:sort(Info)),
+    SortedIdList.
+
+ %   [db_log:read(Id)||Id<-SortedList].
   %  [{Id,db_log:read(Id)}||Id<-SortedList].
 
-read_all_info(NumLatesInfo)->
+read_all_info(NumLatesId)->
     Info=mnesia:dirty_all_keys(logger_info),
-    SortedList=lists:reverse(lists:sort(Info)),    
-    [db_log:read(Id)||Id<-lists:sublist(SortedList,NumLatesInfo)].
+    SortedIdList=lists:reverse([Id||Id<-lists:sort(Info),
+				    Id>NumLatesId]),
+    SortedIdList.		       
+%    [db_log:read(Id)||Id<-lists:sublist(SortedList,NumLatesInfo)].
  %   [{Id,db_log:read(Id)}||Id<-lists:sublist(SortedList,NumLatesInfo)].
 
 %% --------------------------------------------------------------------
