@@ -140,7 +140,7 @@ get_hostname(Parent,Id)->
  %   io:format("get_hostname= ~p~n",[{?MODULE,?LINE,R1,Host}]),
     Result=case R1=:=[Host] of
 	       false->
-		    log:log(?Log_ticket("error my_ssh,ssh_send",[Id,Ip,node(),R1])),
+		    log:log(?Log_ticket("error my_ssh,ssh_send",[Id,Ip,node()])),
 		   [R1];
 	       true->
 		   ok
