@@ -11,6 +11,8 @@
 %% Behavioural exports
 %% --------------------------------------------------------------------
 -export([
+	 nice_print/1,
+	 nice_print/2,
 	 log/1,
 	 store_alert/1,
 	 store_ticket/1,
@@ -71,6 +73,11 @@ start()-> gen_server:start_link({local, ?SERVER}, ?SERVER, [], []).
 stop()-> gen_server:call(?SERVER, {stop},infinity).
 
 
+
+nice_print(Id)->
+    gen_server:cast(?SERVER, {nice_print,Id}).
+nice_print(Id,Node)->
+    gen_server:cast(?SERVER, {nice_print,Id,Node}).
 log(Info)-> 
     gen_server:cast(?SERVER, {log,Info}).
 

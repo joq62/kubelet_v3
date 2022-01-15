@@ -95,6 +95,14 @@ handle_call(Request, From, State) ->
 handle_cast({log,Info}, State) ->
     lib_log:store(Info),
     {noreply, State};
+
+handle_cast({nice_print,Id}, State) ->
+    lib_log:nice_print(Id),
+    {noreply, State};
+handle_cast({nice_print,Id,Node}, State) ->
+    lib_log:nice_print(Id,Node),
+    {noreply, State};
+
 handle_cast(Msg, State) ->
     io:format("unmatched match cast ~p~n",[{Msg,?MODULE,?LINE}]),
     {noreply, State}.
