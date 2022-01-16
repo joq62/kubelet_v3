@@ -55,6 +55,7 @@ unit_test:
 	erlc -D debug_flag -I include -o test_ebin test_src/*.erl;
 	erl -pa ebin -pa test_ebin\
 	    -setcookie cookie_test\
+	    -hidden\
 	    -sname test\
 	    -unit_test monitor_node test\
 	    -unit_test cluster_id test\

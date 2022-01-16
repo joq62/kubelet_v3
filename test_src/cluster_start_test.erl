@@ -65,7 +65,7 @@ init()->
     pong=rpc:call(N0,bully,ping,[],2000),
     pong=rpc:call(N0,dbase,ping,[],2000),
    
-
+   timer:sleep(1000),
     N0=rpc:call(N0,bully,who_is_leader,[],5000),
 
  %% Start N1  node  
@@ -74,6 +74,7 @@ init()->
     pong=rpc:call(N1,sd,ping,[],2000),
     pong=rpc:call(N1,bully,ping,[],2000),
     pong=rpc:call(N1,dbase,ping,[],2000),
+    timer:sleep(1000),
     N0=rpc:call(N1,bully,who_is_leader,[],5000),
 
  %% Start N2  node  
@@ -82,6 +83,7 @@ init()->
     pong=rpc:call(N2,sd,ping,[],2000),
     pong=rpc:call(N2,bully,ping,[],2000),
     pong=rpc:call(N2,dbase,ping,[],2000),
+    timer:sleep(1000),
     N0=rpc:call(N2,bully,who_is_leader,[],5000),
     
 %   io:format("nodes() ~p~n",[{nodes(),?FUNCTION_NAME,?MODULE,?LINE}]),

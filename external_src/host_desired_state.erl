@@ -25,23 +25,14 @@
 %% External functions
 %% ====================================================================
 start()->
-   % [net_adm:ping(db_host:node(HostId))||HostId<-db_host:ids()],
-    StartedOs=lists:sort(lib_host:os_started()),
-    StartedHostNodes=lists:sort(lib_host:node_started()),
-    HostsToStart=[HostId||HostId<-StartedOs,
-			  false=:=lists:member(HostId,StartedHostNodes)],
-    case HostsToStart of
+    MissingHosts=[HostId||HostId<-db_host:ids(),
+			  pang=:=net_adm:ping(db_host:node(HostId))],
+    case MissingHosts of
 	[]->
 	    ok;
 	HostsToStart->
-	    log:log(?Log_ticket("hosts to start ",[HostsToStart])),
-	 %   Result=[pod:ssh_start(HostId)||HostId<-HostsToStart],
-	  %  [net_adm:ping(db_host:node(HostId))||HostId<-db_host:ids()],
-	 %   log:log(?Log_ticket("Start Result ",[Result])),
-	   % Result=pod:restart_hosts_nodes(HostsToStart),
-	    Result=glurk,
-	    Result
-	    
+	    log:log(?Log_ticket("Missinghosts to start ",[MissingHosts])),
+	    ok	    
     end.
 
 %% --------------------------------------------------------------------
