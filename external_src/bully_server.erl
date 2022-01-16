@@ -16,7 +16,7 @@
 %% --------------------------------------------------------------------
 -include("log.hrl").
 %% --------------------------------------------------------------------
--define(WAIT_FOR_ELECTION_RESPONSE_TIMEOUT,3*1000).
+-define(WAIT_FOR_ELECTION_RESPONSE_TIMEOUT,2*1000).
 
 %% External exports
 
@@ -49,7 +49,7 @@
 init([]) ->
 %    io:format("bully 1 ~p~n",[{?MODULE,?LINE}]),
     bully:start_election(),
-    timer:sleep(?WAIT_FOR_ELECTION_RESPONSE_TIMEOUT+1000),
+    timer:sleep(?WAIT_FOR_ELECTION_RESPONSE_TIMEOUT),
     rpc:cast(node(),log,log,[?Log_info("server started",[])]),
     {ok, #state{nodes = [],
 		coordinator_node = node(), 
@@ -98,9 +98,11 @@ handle_cast({election_message,CoordinatorNode}, State) ->
     rpc:cast(node(),log,log,[?Log_debug("Election_message received",[CoordinatorNode])]),
 %    io:format("CoordinatorNode ,node() , > ~p~n",[{CoordinatorNode,node(),CoordinatorNode > node(),
 %						   ?FUNCTION_NAME,?MODULE,?LINE}]),
-    {CoordinatorNodeName,_}=misc_node:vmid_hostid(CoordinatorNode),
-    {NodeName,_}=misc_node:vmid_hostid(node()),
-    case CoordinatorNodeName > NodeName of
+%    {CoordinatorNodeName,_}=misc_node:vmid_hostid(CoordinatorNode),
+ %   {NodeName,_}=misc_node:vmid_hostid(node()),
+    CooridnatorId=misc_node:vmid_hostid(CoordinatorNode),
+    NodeId=misc_node:vmid_hostid(node()),
+    case CooridnatorId > NodeId of
 	false->% lost election
 	    NewState=State;
 	true->
@@ -255,15 +257,25 @@ election_timeout()->
 %% Description: Initiate the eunit tests, set upp needed processes etc
 %% Returns: non
 %% --------------------------------------------------------------------
-nodes_with_higher_ids(Nodes) ->
-    {NodeName,_}=misc_node:vmid_hostid(node()),
-    NodeNodeNameHostIds=[{Node,misc_node:vmid_hostid(Node)}||Node<-Nodes],
-    [Node || {Node, {XNodeName,_HostId}}<- NodeNodeNameHostIds,
-	     XNodeName > NodeName].
+nodes_with_higher_ids(ChallangeNodes) ->
+    NodeId=misc_node:vmid_hostid(node()),
+    [Node || Node<- ChallangeNodes,
+	     misc_node:vmid_hostid(Node) > NodeId].
 
-nodes_with_lower_ids(Nodes) ->
- {NodeName,_}=misc_node:vmid_hostid(node()),
-    NodeNodeNameHostIds=[{Node,misc_node:vmid_hostid(Node)}||Node<-Nodes],
-    [Node || {Node, {XNodeName,_HostId}}<- NodeNodeNameHostIds,
-	     XNodeName < NodeName].
+nodes_with_lower_ids(ChallangeNodes) ->
+    NodeId=misc_node:vmid_hostid(node()),
+    [Node || Node<- ChallangeNodes,
+	     misc_node:vmid_hostid(Node) < NodeId].
+
+%nodes_with_higher_ids(Nodes) ->
+ %   {NodeName,_}=misc_node:vmid_hostid(node()),
+ %   NodeNodeNameHostIds=[{Node,misc_node:vmid_hostid(Node)}||Node<-Nodes],
+ %   [Node || {Node, {XNodeName,_HostId}}<- NodeNodeNameHostIds,
+%	     XNodeName > NodeName].
+
+%nodes_with_lower_ids(Nodes) ->
+% {NodeName,_}=misc_node:vmid_hostid(node()),
+%    NodeNodeNameHostIds=[{Node,misc_node:vmid_hostid(Node)}||Node<-Nodes],
+ %   [Node || {Node, {XNodeName,_HostId}}<- NodeNodeNameHostIds,
+%	     XNodeName < NodeName].
    % [Node || Node <- Nodes, Node < NodeName ].
