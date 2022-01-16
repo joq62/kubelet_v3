@@ -60,7 +60,7 @@ init([]) ->
     {ok,DbaseApplication}=application:get_env(application),
     DbaseAppNodes=lists:delete(node(),sd:get(DbaseApplication)),
     ok=lib_dbase:dynamic_db_init(DbaseAppNodes),
-    
+ 
     rpc:cast(node(),log,log,[?Log_info("server started",[])]),
     {ok, #state{}}.
 
