@@ -58,16 +58,16 @@ init([]) ->
     Res=[{Node,net_adm:ping(Node)}||Node<-?KubeletNodes],
 
     ok=application:start(sd),
-    ok=application:set_env([{bully,[{kubelet_nodes,?KubeletNodes}]}]),
-  %  ok=application:set_env([{bully,[{application,bully}]}]),
-    ok=application:start(bully), 
- %   timer:sleep(3000), 
+ 
     ok=application:set_env([{dbase,[{application,dbase}]}]),
     ok=application:start(dbase),
+ %   ok=application:set_env([{bully,[{kubelet_nodes,?KubeletNodes}]}]),
+    ok=application:set_env([{bully,[{application,bully}]}]),
+    ok=application:start(bully), 
     ok=application:start(log),
     ok=application:start(host),
-    rpc:cast(node(),log,log,[?Log_info("Ping Res",[Res])]),
-    rpc:cast(node(),log,log,[?Log_info("server started",[])]),
+    rpc:cast(node(),log,log,[?Log_info("Available Kubelete Nodes",[Res])]),
+    rpc:cast(node(),log,log,[?Log_info("Server started",[])]),
     {ok, #state{}}.
 
 %% --------------------------------------------------------------------

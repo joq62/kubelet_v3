@@ -32,8 +32,18 @@
 %% External functions
 %% ====================================================================
 get_nodes()->
-    {ok,KubeletNodes}=application:get_env(kubelet_nodes),
-    lists:delete(node(),KubeletNodes).
+    
+    {ok,BullyApp}=application:get_env(application),
+    case sd:get(BullyApp) of
+	[]->
+	    rpc:cast(node(),log,log,[?Log_info("no kubelet nodes ",[])]),
+	    [];
+	Nodes ->
+	    rpc:cast(node(),log,log,[?Log_info("Nodes ",[Nodes])]),
+	    Nodes
+    end.
+%    {ok,KubeletNodes}=application:get_env(kubelet_nodes),
+ %   lists:delete(node(),KubeletNodes).
 
 %get_nodes()->
  %   {ok,KubeletNodes}=application:get_env(kubelet_nodes),
