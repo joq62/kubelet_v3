@@ -33,12 +33,14 @@
 %% ====================================================================
 get_nodes()->
     {ok,KubeletNodes}=application:get_env(kubelet_nodes),
-    case  [Node||Node<-KubeletNodes,
-		 pong=:=net_adm:ping(Node)] of
+  %  case  [Node||Node<-KubeletNodes,
+%		 pong=:=net_adm:ping(Node)] of
+    case sd:get(glurk) of
 	[]->
 	    rpc:cast(node(),log,log,[?Log_info("no kubelet nodes ",[])]),
 	    [];
 	Nodes ->
+	    rpc:cast(node(),log,log,[?Log_info("Nodes ",[Nodes])]),
 	    Nodes
     end.
   % lists:delete(node(),sd:get(BullyApp)).
