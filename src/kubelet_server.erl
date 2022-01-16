@@ -59,9 +59,9 @@ init([]) ->
 
     ok=application:start(sd),
     timer:sleep(2000),
-    ok=application:set_env([{bully,[{application,bully}]}]),
+    ok=application:set_env([{bully,[{application,kubelet}]}]),
     ok=application:start(bully),  
-    ok=application:set_env([{dbase,[{application,dbase}]}]),
+    ok=application:set_env([{dbase,[{application,kubelet}]}]),
     ok=application:start(dbase),
     ok=application:start(log),
     ok=application:start(host),
