@@ -17,7 +17,7 @@ all:
 	cp ../host_server/include/*.config ebin;
 	cp ../host_server/src/*.erl external_src;
 #	external
-	erlc -I include -I external_include -o ebin external_src/*.erl;
+	erlc -I ../log_server/include -I include -I external_include -o ebin external_src/*.erl;
 #	kubelet
 	cp src/*.app ebin;
 	erlc -I ../log_server/include -I external_include -o ebin src/*.erl;
@@ -46,13 +46,13 @@ unit_test:
 	cp ../host_server/include/*.config ebin;
 	cp ../host_server/src/*.erl external_src;
 #	external
-	erlc -D unit_test -I include -I external_include -o ebin external_src/*.erl;
+	erlc -D unit_test -I external_include -o ebin external_src/*.erl;
 #	kubelet
 	cp src/*.app ebin;
-	erlc -D unit_test -I include -I external_include -o ebin src/*.erl;
+	erlc -D unit_test -I external_include -o ebin src/*.erl;
 #	test application
 	cp test_src/*.app test_ebin;
-	erlc -D debug_flag -I include -o test_ebin test_src/*.erl;
+	erlc -D debug_flag -I external_include  -o test_ebin test_src/*.erl;
 	erl -pa ebin -pa test_ebin\
 	    -setcookie cookie_test\
 	    -hidden\

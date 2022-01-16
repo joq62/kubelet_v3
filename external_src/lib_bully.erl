@@ -19,7 +19,7 @@
 %%---------------------------------------------------------------------
 %% Records for test
 %%
-
+-include("log.hrl").
 %% --------------------------------------------------------------------
 %-compile(export_all).
 
@@ -32,6 +32,14 @@
 %% External functions
 %% ====================================================================
 get_nodes()->
-    {ok,BullyApp}=application:get_env(application),
-    lists:delete(node(),sd:get(BullyApp)).
+    {ok,KubeletNodes}=application:get_env(kubelet_nodes),
+    case  [Node||Node<-KubeletNodes,
+		 pong=:=net_adm:ping(Node)] of
+	[]->
+	    rpc:cast(node(),log,log,[?Log_info("no kubelet nodes ",[])]),
+	    [];
+	Nodes ->
+	    Nodes
+    end.
+  % lists:delete(node(),sd:get(BullyApp)).
   %  lists:delete(node(),sd:get(bully_test)).

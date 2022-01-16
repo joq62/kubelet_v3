@@ -48,8 +48,8 @@
 %% --------------------------------------------------------------------
 init([]) ->
 %    io:format("bully 1 ~p~n",[{?MODULE,?LINE}]),
-    bully_server:start_election(),
-    timer:sleep(?WAIT_FOR_ELECTION_RESPONSE_TIMEOUT+1000),
+    bully:start_election(),
+  %  timer:sleep(?WAIT_FOR_ELECTION_RESPONSE_TIMEOUT+1000),
     rpc:cast(node(),log,log,[?Log_info("server started",[])]),
     {ok, #state{nodes = [],
 		coordinator_node = node(), 
