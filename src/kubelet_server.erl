@@ -58,13 +58,13 @@ init([]) ->
     [net_adm:ping(Node)||Node<-?KubeletNodes],
 
     ok=application:start(sd),
+    timer:sleep(2000),
     ok=application:set_env([{bully,[{application,bully}]}]),
     ok=application:start(bully),  
     ok=application:set_env([{dbase,[{application,dbase}]}]),
     ok=application:start(dbase),
     ok=application:start(log),
     ok=application:start(host),
-    timer:sleep(1000),
     rpc:cast(node(),log,log,[?Log_info("server started",[])]),
     {ok, #state{}}.
 
