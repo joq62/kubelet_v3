@@ -40,7 +40,7 @@ get_nodes()->
 	    [];
 	Nodes ->
 	    rpc:cast(node(),log,log,[?Log_info("Nodes ",[Nodes])]),
-	    Nodes
+	    lists:delete(node(),Nodes)
     end.
 %    {ok,KubeletNodes}=application:get_env(kubelet_nodes),
  %   lists:delete(node(),KubeletNodes).
