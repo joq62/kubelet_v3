@@ -164,8 +164,8 @@ do_desired_state()->
 	       false->
 		   ok;
 	       true->
-		   Result=rpc:call(node(),host_desired_state,start,[],2*60*1000),
-		   log:log(?Log_info("Result",[Result]))
+		   Result=rpc:call(node(),host_desired_state,start,[],2*60*1000)
+		  % log:log(?Log_info("Result",[Result]))
 	   end,
    
     timer:sleep(?ScheduleInterval),

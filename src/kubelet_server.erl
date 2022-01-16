@@ -55,7 +55,7 @@ schedule()->
 %%          {stop, Reason}
 %% --------------------------------------------------------------------
 init([]) ->
-    [net_adm:ping(Node)||Node<-?KubeletNodes],
+    Res=[{Node,net_adm:ping(Node)}||Node<-?KubeletNodes],
 
     ok=application:start(sd),
     timer:sleep(2000),
@@ -65,6 +65,7 @@ init([]) ->
     ok=application:start(dbase),
     ok=application:start(log),
     ok=application:start(host),
+    rpc:cast(node(),log,log,[?Log_info("Ping Res",[Res])]),
     rpc:cast(node(),log,log,[?Log_info("server started",[])]),
     {ok, #state{}}.
 
