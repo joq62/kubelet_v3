@@ -58,10 +58,10 @@ init([]) ->
     Res=[{Node,net_adm:ping(Node)}||Node<-?KubeletNodes],
 
     ok=application:start(sd),
-    ok=application:set_env([{bully,[{application,kubelet}]}]),
+    ok=application:set_env([{bully,[{application,bully}]}]),
     ok=application:start(bully), 
-    timer:sleep(3000), 
-    ok=application:set_env([{dbase,[{application,kubelet}]}]),
+ %   timer:sleep(3000), 
+    ok=application:set_env([{dbase,[{application,dbase}]}]),
     ok=application:start(dbase),
     ok=application:start(log),
     ok=application:start(host),
