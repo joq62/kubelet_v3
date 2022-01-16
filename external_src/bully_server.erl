@@ -16,7 +16,7 @@
 %% --------------------------------------------------------------------
 -include("log.hrl").
 %% --------------------------------------------------------------------
--define(WAIT_FOR_ELECTION_RESPONSE_TIMEOUT,5*100).
+-define(WAIT_FOR_ELECTION_RESPONSE_TIMEOUT,3*1000).
 
 %% External exports
 
