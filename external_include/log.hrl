@@ -1,5 +1,6 @@
 -define(SystemTime,millisecond).
-
+-define(Log_debug(Msg,Args),
+	{erlang:system_time(?SystemTime),node(),"DEBUG ",Msg,?MODULE,?FUNCTION_NAME,?LINE,Args,new}).
 -define(Log_info(Msg,Args),
 	{erlang:system_time(?SystemTime),node(),"INFO  ",Msg,?MODULE,?FUNCTION_NAME,?LINE,Args,new}).
 -define(Log_ticket(Msg,Args),

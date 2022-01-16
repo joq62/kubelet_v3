@@ -95,6 +95,7 @@ handle_call(Request, From, State) ->
 %%          {stop, Reason, State}            (terminate/2 is called)
 %% --------------------------------------------------------------------
 handle_cast({election_message,CoordinatorNode}, State) ->
+    rpc:cast(node(),log,log,[?Log_debug("Election_message received",[CoordinatorNode])]),
 %    io:format("CoordinatorNode ,node() , > ~p~n",[{CoordinatorNode,node(),CoordinatorNode > node(),
 %						   ?FUNCTION_NAME,?MODULE,?LINE}]),
     {CoordinatorNodeName,_}=misc_node:vmid_hostid(CoordinatorNode),
@@ -123,10 +124,12 @@ handle_cast({election_timeout,_PidTimeout}, State) ->
     {noreply, NewState};
 
 handle_cast({coordinator_message,CoordinatorNode}, State) ->
+    rpc:cast(node(),log,log,[?Log_debug("Coordinator_message received",[CoordinatorNode])]),
     NewState=set_coordinator(State, CoordinatorNode),
     {noreply, NewState};
 
 handle_cast({start_election}, State) ->
+    rpc:cast(node(),log,log,[?Log_debug("Start Election message received",[])]),
     NewState=start_election(State),
     {noreply, NewState};
 
@@ -185,7 +188,7 @@ code_change(_OldVsn, State, _Extra) ->
 %% Returns: non
 %% --------------------------------------------------------------------
 start_election(State) ->
-    rpc:cast(node(),log,log,[?Log_info("election started by node ",[node()])]),
+    rpc:cast(node(),log,log,[?Log_debug("Election started by node ",[])]),
     Nodes=lib_bully:get_nodes(),
 %    NodesHigherId=nodes_with_higher_ids(Nodes),
 %    [rpc:cast(Node,bully,election_message,[node()])||Node<-NodesHigherId],
@@ -203,7 +206,7 @@ start_election(State) ->
 %% Returns: non
 %% --------------------------------------------------------------------
 win_election( State) ->
-    rpc:cast(node(),log,log,[?Log_info("Node  won the election ",[node()])]),
+    rpc:cast(node(),log,log,[?Log_debug("Node  won the election ",[node()])]),
   %  io:format("Node  won the election ~p~n", [{node(),?FUNCTION_NAME,?MODULE,?LINE}]),
  %   rpc:cast(node(),db_logger,create,["log","election winner",atom_to_list(node()),{?MODULE,?FUNCTION_NAME,?LINE}]),
 %    {ok,Nodes}=application:get_env(bully,nodes),
